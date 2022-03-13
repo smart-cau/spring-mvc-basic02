@@ -2,6 +2,7 @@ package hello.stringmvc.basic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -88,7 +89,7 @@ public class RequestParamController {
      * 참고: defaultValue는 빈 문자의 경우에도 적용 * /request-param?username=
      */
     @ResponseBody
-    @RequestMapping("/request-param-required")
+    @RequestMapping("/request-param-default")
     public String requestParamDefault(
             @RequestParam(required = true, defaultValue = "guest") String username,
             @RequestParam(required = false, defaultValue = "-1") int age) {
@@ -107,4 +108,32 @@ public class RequestParamController {
         log.info("username={}, age={}", paramMap.get("username"), paramMap.get("age"));
         return "ok";
     }
+
+    /**
+     * @ModelAttribute 사용
+     * 참고: model.addAttribute(helloData) 코드도 함께 자동 적용됨, 뒤에 model을 설명할 때 자세히 설명
+     */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v1")
+    public String modelAttributeV1(@ModelAttribute HelloData helloData) { // (@RequestParam String username, @RequestParam int age)
+        // HelloData helloData = new HelloData();
+        // helloData.setUsername(username);
+        // helloData.setAge(age);
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
+        return "ok";
+    }
+
+    /**
+     * @ModelAttribute 생략 가능. 하지만 따로 명시해주자
+     * String, int 같은 단순 타입 = @RequestParam
+     * argument resolver 로 지정해둔 타입 외 = @ModelAttribute
+     * */
+    @ResponseBody
+    @RequestMapping("/model-attribute-v2")
+    public String modelAttributeV2(HelloData helloData) {
+        log.info("username = {}, age = {}", helloData.getUsername(), helloData.getAge());
+        return "ok";
+    }
+
+    /** -----여기 까지는 client에서 정보를 받는 3가지 방법 중 2가지(Get & HTML Form) 방법의 request param을 읽는 방법 **/
 }
