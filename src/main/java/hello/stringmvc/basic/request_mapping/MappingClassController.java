@@ -1,4 +1,4 @@
-package hello.stringmvc.basic;
+package hello.stringmvc.basic.request_mapping;
 
 import org.springframework.web.bind.annotation.*;
 
